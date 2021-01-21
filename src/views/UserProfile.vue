@@ -17,7 +17,7 @@
   <div class="twoots-wrapper">
     <h3 class="section-title">{{ fullName }} Twoots</h3>
     <twoot-item 
-      v-for="twoot in state.twoots" :key="twoot.id"
+      v-for="twoot in state.user.twoots" :key="twoot.id"
       :fullName="fullName"
       :twoot="twoot"
       @favorite="toggleFavorite"
@@ -26,9 +26,11 @@
 </template>
 
 <script>
-import TwootItem from './TwootItem';
-import PostTwoot from './PostTwoot';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { useRoute } from 'vue-router'
+import TwootItem from '@/components/TwootItem';
+import PostTwoot from '@/components/PostTwoot';
+import { users } from '@/assets/users'
 
 export default {
   name: 'UserProfile',
@@ -39,56 +41,14 @@ export default {
   },
 
   setup() {
+    const route = useRoute();
+    const userId = computed(() => route.params.userId)
+
+
     let followers = ref(0)
     const state = reactive({
       followers: 0,
-      user: {
-        id: 1,
-        username: 'festus',
-        firstName: 'Festus',
-        lastName: 'Ali',
-        email: 'festusali@gmail.com',
-        isAdmin: true
-      },
-      twoots: [
-        {
-          id: 1,
-          content: "First twoot by Festus.",
-          date: "12/01/2021",
-          favorites: [
-            {id: 1, user: "festus1", date: "13/01/2021"},
-            {id: 2, user: "festus_1", date: "15/01/2021"},
-            {id: 3, user: "festus_11", date: "14/01/2021"},
-            {id: 4, user: "festus11", date: "12/01/2021"}
-          ]
-        },
-        {
-          id: 2,
-          content: "Second twoot by Festus.",
-          date: "13/01/2021",
-          favorites: [
-            {id: 2, user: "festus", date: "12/01/2021"}
-          ]
-        },
-        {
-          id: 3,
-          content: "Third twoot by Festus.",
-          date: "14/01/2021",
-          favorites: [
-            {id: 5, user: "festus_1", date: "14/01/2021"},
-            {id: 7, user: "festus1", date: "14/01/2021"}
-          ]
-        },
-        {
-          id: 4,
-          content: "Fourth twoot by Festus.",
-          date: "15/01/2021",
-          favorites: [
-            {id: 3, user: "festus1", date: "14/01/2021"},
-            {id: 9, user: "festus", date: "14/01/2021"}
-          ]
-        }
-      ]
+      user: users[userId.value - 1] || users[0],
     })
 
     const fullName = computed(() => {
@@ -100,17 +60,17 @@ export default {
     }
 
     function toggleFavorite(id, username) {
-      for (let i=0; i < state.twoots.length; i++) {
-        if (state.twoots[i].id === id) {
-          for (let index=0; index < state.twoots[i].favorites.length; index++) {
-            if (state.twoots[i].favorites[index].user === username) {
-              state.twoots[i].favorites.splice(index, 1);
+      for (let i=0; i < state.user.twoots.length; i++) {
+        if (state.user.twoots[i].id === id) {
+          for (let index=0; index < state.user.twoots[i].favorites.length; index++) {
+            if (state.user.twoots[i].favorites[index].user === username) {
+              state.user.twoots[i].favorites.splice(index, 1);
               return;
             }
           }
-          state.twoots[i].favorites.push(
+          state.user.twoots[i].favorites.push(
             {
-              id: state.twoots[i].favorites.length + 1,
+              id: state.user.twoots[i].favorites.length + 1,
               user: username,
               date: Date()
             }
@@ -121,12 +81,12 @@ export default {
 
     function createNewTwoot(content) {
       const twoot = {
-        id: state.twoots.length + 1,
+        id: state.user.twoots.length + 1,
         content,
         date: Date(),
         favorites: []
       };
-      state.twoots.unshift(twoot);
+      state.user.twoots.unshift(twoot);
     }
 
     onMounted(followUser)
@@ -146,7 +106,8 @@ export default {
       followers,
       followUser,
       toggleFavorite,
-      createNewTwoot
+      createNewTwoot,
+      userId
     }
   }
 }
