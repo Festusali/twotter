@@ -49,7 +49,7 @@ router.beforeEach(async (to, from, next) => {
   const isAdmin = false;
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
 
-  if (requiresAdmin && !isAdmin) next({ name: 'Home' });
+  if (requiresAdmin && isAdmin) next({ name: 'Home' });
   else next();
 })
 

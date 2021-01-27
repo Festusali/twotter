@@ -82,7 +82,7 @@ export default {
         padding: 3px 7px;
 
         &:hover {
-          background-color: #42b983;
+          background-color: #12dc80;
           color: white;
         }
       }

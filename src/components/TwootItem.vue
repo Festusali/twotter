@@ -75,7 +75,7 @@ export default {
       border-radius: 0.5em;
 
       &:hover {
-        background-color: #42b983;
+        background-color: #12dc80;
         color: white;
       }
     }

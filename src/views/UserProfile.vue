@@ -3,9 +3,9 @@
     <div class="user-details">
       <span>@{{ state.user.username }}</span>
     </div>
-    <span class="admin-badge" v-if="state.user.isAdmin">
+    <div v-if="state.user.isAdmin" class="admin-badge">
       Admin
-    </span>
+    </div>
     <div class="user-followers">
       <strong>Followers:</strong> {{ followers }}
       <button class="follow-user" title="Follow" @click="followUser">+</button>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router'
 import TwootItem from '@/components/TwootItem';
 import PostTwoot from '@/components/PostTwoot';
@@ -91,15 +91,6 @@ export default {
 
     onMounted(followUser)
 
-    watch(followers, (newFollowerCount, oldFollowerCount) => {
-      if (newFollowerCount > oldFollowerCount) {
-        alert(`
-          You are gaining followers!
-          It used to be: ${oldFollowerCount}, it's now: ${ newFollowerCount}
-        `)
-      }
-    })
-
     return {
       state,
       fullName,
@@ -124,10 +115,12 @@ export default {
   }
   
   .admin-badge {
-    background-color: rebeccapurple;
+    background-color: #12dc80;
     color: white;
     font-weight: bold;
     font-size: initial;
+    display: inline-block;
+    margin-top: 10px;
     margin-right: auto;
     padding: 5px;
     border-radius: .5em;
@@ -139,13 +132,13 @@ export default {
     font-size: 25px;
     font-weight: bolder;
     background-color: white;
-    color: blue;
+    color: #12dc80;
     border-radius: 50%;
-    border: 1px solid blue;
+    border: 1px solid #12dc80;
     margin-left: 15px;
 
     &:hover {
-      background-color: blue;
+      background-color: #12dc80;
       color: white;
       border: 1px solid white;
     }
@@ -154,7 +147,6 @@ export default {
 
 .twoots-wrapper {
   background-color: #2c3e50;
-  margin: 15px 0;
   padding: 20px 0px;
 
   .section-title {
